@@ -1,0 +1,10 @@
+# Supabase private credentials
+js/supabase-config.js
+
+# OS & Editor temp files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/

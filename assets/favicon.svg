@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF6EA"/>
+      <stop offset="100%" stop-color="#F6DCCB"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#8A3556" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="url(#bg)"/>
+  <rect x="4" y="4" width="120" height="120" rx="24" fill="none" stroke="#D0587E" stroke-width="1.5" stroke-opacity="0.4" stroke-dasharray="4,3"/>
+  <!-- Stylized Lily stem / petal behind M -->
+  <path d="M48 95 C 44 70, 58 45, 84 34 C 70 46, 68 62, 70 85" fill="none" stroke="#E8A3B8" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M78 36 C 88 30, 94 34, 90 44 C 84 46, 76 42, 78 36 Z" fill="#D0587E" fill-opacity="0.6"/>
+  <!-- Elegant Serif M -->
+  <text x="64" y="88" font-family="'Cormorant Garamond', 'Playfair Display', 'Liberation Serif', 'Georgia', serif" font-size="74" font-weight="600" fill="#8A3556" text-anchor="middle">M</text>
+  <!-- Small botanical dot / seed -->
+  <circle cx="64" cy="102" r="2.5" fill="#D0587E"/>
+</svg>

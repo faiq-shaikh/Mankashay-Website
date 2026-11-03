@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop Handcrafted Resin Art & Botanical Jewelry | Mankashay</title>
+  <meta name="description" content="Explore handcrafted botanical resin pendants, custom letter keychains, flower preservation keepsakes, and resin vanity trays. Shipping across Pakistan.">
+  <link rel="canonical" href="https://mankashay.com/shop.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mankashay.com/shop.html">
+  <meta property="og:site_name" content="Mankashay">
+  <meta property="og:title" content="Shop Handcrafted Resin Art | Mankashay">
+  <meta property="og:description" content="Botanical pendants, floral initial keychains, and preservation keepsakes handmade at BIC MUET.">
+  <meta property="og:image" content="https://mankashay.com/assets/images/og-image.webp">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="alternate icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/favicon.png">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Accessibility Skip Link -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Top Announcement Bar -->
+  <div class="announcement-bar" role="region" aria-label="Announcement">
+    <span>🌸 All pieces are unique & handcrafted • Shipping nationwide across Pakistan • Incubated at <strong>BIC MUET</strong></span>
+  </div>
+
+  <!-- Site Header & Navigation -->
+  <header class="site-header" role="banner">
+    <div class="container header-container">
+      <a href="index.html" class="brand-link" aria-label="Mankashay Homepage">
+        <picture>
+          <source srcset="assets/images/logo.webp" type="image/webp">
+          <img src="assets/images/logo.jpg" alt="Mankashay Logo" class="brand-logo-img" width="46" height="46">
+        </picture>
+        <div class="brand-text">
+          <span class="brand-name">MANKASHAY</span>
+          <span class="brand-tagline">Art that lasts forever</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="main-nav" id="main-nav" aria-label="Main Navigation">
+        <ul class="nav-list">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="shop.html" class="nav-link active" aria-current="page">Shop</a></li>
+          <li><a href="custom-orders.html" class="nav-link">Custom Orders</a></li>
+          <li><a href="workshops.html" class="nav-link">Workshops</a></li>
+          <li><a href="about.html" class="nav-link">About</a></li>
+          <li><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Header CTAs & Hamburger Toggle -->
+      <div class="header-actions">
+        <a href="custom-orders.html" class="btn btn-primary btn-sm">Order Custom</a>
+        <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle navigation menu">
+          <span class="menu-toggle-icon"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Backdrop -->
+  <div class="mobile-nav-backdrop" aria-hidden="true"></div>
+
+  <!-- Main Content -->
+  <main id="main-content">
+    
+    <!-- Page Header Banner -->
+    <section class="section section-peach" style="padding-bottom: 2.5rem; text-align: center;">
+      <div class="container">
+        <span class="eyebrow fade-in-up">Handcrafted Gallery</span>
+        <h1 class="fade-in-up" style="margin-bottom: 0.85rem;">The Artisan Collection</h1>
+        <div class="vintage-divider fade-in-up" aria-hidden="true">✦ ✤ ✦</div>
+        <p class="fade-in-up" style="max-width: 600px; margin: 0 auto;">
+          Each item is made with hand-picked natural flora, cast in high-clarity resin, and sanded by hand. Click "Inquire" to purchase or customize any piece.
+        </p>
+      </div>
+    </section>
+
+    <!-- Shop Grid & Filter Chips -->
+    <section class="section" style="padding-top: 2rem;">
+      <div class="container">
+        
+        <!-- Category Filter Chips -->
+        <div class="filter-bar" role="group" aria-label="Filter products by category">
+          <button class="filter-chip active" data-filter="all">All Pieces</button>
+          <button class="filter-chip" data-filter="pendants">Pendants</button>
+          <button class="filter-chip" data-filter="keychains">Keychains</button>
+          <button class="filter-chip" data-filter="preservations">Flower Preservations</button>
+          <button class="filter-chip" data-filter="other">Custom Art &amp; Trays</button>
+        </div>
+
+        <!-- Products Loading / Status Banner -->
+        <div id="shop-status-message" style="display: none; text-align: center; margin-bottom: 2rem; color: var(--text-muted); font-size: 0.9rem;"></div>
+
+        <!-- Dynamic / Fallback Products Grid -->
+        <div class="product-grid" id="products-grid">
+          
+          <!-- Static / Fallback Product 1 -->
+          <article class="product-card fade-in-up" data-category="pendants">
+            <div class="product-media">
+              <picture>
+                <source srcset="assets/images/pendant-rose-petal.webp" type="image/webp">
+                <img src="assets/images/pendant-rose-petal.jpg" alt="Rose Petal Teardrop Pendant" class="product-image" width="800" height="800" loading="lazy">
+              </picture>
+              <span class="product-badge">Pendants</span>
+            </div>
+            <div class="product-body">
+              <h3 class="product-title">Rose Petal Teardrop Pendant</h3>
+              <p class="product-desc">Deep crimson dried rose petals with 18k gold foil suspended in a crystal teardrop bezel with gold chain.</p>
+              <div class="product-footer">
+                <div class="product-price"><span>Rs.</span>1,850</div>
+                <button class="btn btn-outline-rose btn-sm" onclick="inquireAboutProduct('Rose Petal Teardrop Pendant', 'pendants')">Inquire</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Static / Fallback Product 2 -->
+          <article class="product-card fade-in-up" data-category="pendants">
+            <div class="product-media">
+              <picture>
+                <source srcset="assets/images/pendant-forgetmenot.webp" type="image/webp">
+                <img src="assets/images/pendant-forgetmenot.jpg" alt="Forget-Me-Not Oval Pendant" class="product-image" width="800" height="800" loading="lazy">
+              </picture>
+              <span class="product-badge">Pendants</span>
+            </div>
+            <div class="product-body">
+              <h3 class="product-title">Forget-Me-Not Oval Pendant</h3>
+              <p class="product-desc">Delicate sky-blue forget-me-nots encased in UV-resistant crystal resin with an antique filigree bezel.</p>
+              <div class="product-footer">
+                <div class="product-price"><span>Rs.</span>2,100</div>
+                <button class="btn btn-outline-rose btn-sm" onclick="inquireAboutProduct('Forget-Me-Not Oval Pendant', 'pendants')">Inquire</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Static / Fallback Product 3 -->
+          <article class="product-card fade-in-up" data-category="keychains">
+            <div class="product-media">
+              <picture>
+                <source srcset="assets/images/keychain-goldflake.webp" type="image/webp">
+                <img src="assets/images/keychain-goldflake.jpg" alt="Botanical Letter Keychain" class="product-image" width="800" height="800" loading="lazy">
+              </picture>
+              <span class="product-badge">Keychains</span>
+            </div>
+            <div class="product-body">
+              <h3 class="product-title">Botanical Letter Keychain</h3>
+              <p class="product-desc">Custom monogram initial charm with real baby's breath florals, gold leaf, and an ultra-soft suede tassel.</p>
+              <div class="product-footer">
+                <div class="product-price"><span>Rs.</span>1,200</div>
+                <button class="btn btn-outline-rose btn-sm" onclick="inquireAboutProduct('Botanical Letter Keychain', 'keychains')">Inquire</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Static / Fallback Product 4 -->
+          <article class="product-card fade-in-up" data-category="keychains">
+            <div class="product-media">
+              <picture>
+                <source srcset="assets/images/keychain-daisy.webp" type="image/webp">
+                <img src="assets/images/keychain-daisy.jpg" alt="Dried Daisy Bar Keychain" class="product-image" width="800" height="800" loading="lazy">
+              </picture>
+              <span class="product-badge">Keychains</span>
+            </div>
+            <div class="product-body">
+              <h3 class="product-title">Dried Daisy Bar Keychain</h3>
+              <p class="product-desc">Sleek geometric resin bar featuring an intact miniature dried wild daisy. Durable and waterproof.</p>
+              <div class="product-footer">
+                <div class="product-price"><span>Rs.</span>1,350</div>
+                <button class="btn btn-outline-rose btn-sm" onclick="inquireAboutProduct('Dried Daisy Bar Keychain', 'keychains')">Inquire</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Static / Fallback Product 5 -->
+          <article class="product-card fade-in-up" data-category="preservations">
+            <div class="product-media">
+              <picture>
+                <source srcset="assets/images/preservation-bridal-frame.webp" type="image/webp">
+                <img src="assets/images/preservation-bridal-frame.jpg" alt="Bridal Garland Keepsake Frame" class="product-image" width="800" height="800" loading="lazy">
+              </picture>
+              <span class="product-badge">Preservations</span>
+            </div>
+            <div class="product-body">
+              <h3 class="product-title">Bridal Garland Keepsake Frame</h3>
+              <p class="product-desc">Preserve your wedding or Nikkah roses in a 6x6" solid deep-cast resin keepsake with gold letter engraving.</p>
+              <div class="product-footer">
+                <div class="product-price"><span>Rs.</span>8,500</div>
+                <button class="btn btn-outline-rose btn-sm" onclick="inquireAboutProduct('Bridal Garland Keepsake Frame', 'preservations')">Inquire</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Static / Fallback Product 6 -->
+          <article class="product-card fade-in-up" data-category="preservations">
+            <div class="product-media">
+              <picture>
+                <source srcset="assets/images/preservation-anniversary-heart.webp" type="image/webp">
+                <img src="assets/images/preservation-anniversary-heart.jpg" alt="Rose Petal Keepsake Heart" class="product-image" width="800" height="800" loading="lazy">
+              </picture>
+              <span class="product-badge">Preservations</span>
+            </div>
+            <div class="product-body">
+              <h3 class="product-title">Rose Petal Keepsake Heart</h3>
+              <p class="product-desc">Freestanding resin heart preserving precious anniversary or milestone petals with delicate pearl shimmer.</p>
+              <div class="product-footer">
+                <div class="product-price"><span>Rs.</span>4,200</div>
+                <button class="btn btn-outline-rose btn-sm" onclick="inquireAboutProduct('Rose Petal Keepsake Heart', 'preservations')">Inquire</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Static / Fallback Product 7 -->
+          <article class="product-card fade-in-up" data-category="other">
+            <div class="product-media">
+              <picture>
+                <source srcset="assets/images/art-ocean-tray.webp" type="image/webp">
+                <img src="assets/images/art-ocean-tray.jpg" alt="Coastal Bloom Resin Vanity Tray" class="product-image" width="800" height="800" loading="lazy">
+              </picture>
+              <span class="product-badge">Custom Art</span>
+            </div>
+            <div class="product-body">
+              <h3 class="product-title">Coastal Bloom Resin Vanity Tray</h3>
+              <p class="product-desc">Handmade decorative tray with genuine dried lavender, rose petals, and shimmering mica waves with brass handles.</p>
+              <div class="product-footer">
+                <div class="product-price"><span>Rs.</span>5,400</div>
+                <button class="btn btn-outline-rose btn-sm" onclick="inquireAboutProduct('Coastal Bloom Resin Vanity Tray', 'other')">Inquire</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Static / Fallback Product 8 -->
+          <article class="product-card fade-in-up" data-category="other">
+            <div class="product-media">
+              <picture>
+                <source srcset="assets/images/art-floral-bookmark.webp" type="image/webp">
+                <img src="assets/images/art-floral-bookmark.jpg" alt="Botanical Floral Bookmark" class="product-image" width="800" height="800" loading="lazy">
+              </picture>
+              <span class="product-badge">Custom Art</span>
+            </div>
+            <div class="product-body">
+              <h3 class="product-title">Botanical Floral Bookmark</h3>
+              <p class="product-desc">Slim and ultra-durable resin bookmark with hand-pressed wild blooms and a hand-tied blush silk tassel.</p>
+              <div class="product-footer">
+                <div class="product-price"><span>Rs.</span>950</div>
+                <button class="btn btn-outline-rose btn-sm" onclick="inquireAboutProduct('Botanical Floral Bookmark', 'other')">Inquire</button>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Bespoke Custom Commission Notice -->
+    <section class="section section-peach" style="text-align: center;">
+      <div class="container fade-in-up">
+        <span class="eyebrow">Have a Unique Vision?</span>
+        <h2>Looking for a Bespoke Custom Piece?</h2>
+        <div class="vintage-divider" aria-hidden="true">✦ ✤ ✦</div>
+        <p style="max-width: 600px; margin: 0 auto 1.75rem auto;">
+          Whether it is preserving special graduation flowers, crafting wedding favors for guests, or designing a personalized geode clock &mdash; we love custom commissions.
+        </p>
+        <a href="custom-orders.html" class="btn btn-primary btn-lg">Start a Custom Order</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- QUICK INQUIRY MODAL (Pre-fills item and sends to Supabase inquiries) -->
+  <div class="modal-overlay" id="inquiry-modal" role="dialog" aria-modal="true" aria-labelledby="inquiry-modal-title" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="inquiry-modal-title">Inquire About This Piece</h3>
+        <button class="modal-close-btn" data-close-modal aria-label="Close dialog">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form data-supabase-form id="shop-inquiry-form" novalidate>
+          <!-- Spam Honeypot -->
+          <input type="text" name="website_hp" class="form-hp" tabindex="-1" autocomplete="off">
+          <input type="hidden" name="type" value="custom_order">
+
+          <div class="form-group">
+            <label for="modal-product-interest">Selected Piece</label>
+            <input type="text" id="modal-product-interest" name="product_interest" class="form-control" readonly style="font-weight: 600; background: #FFF6EA;">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="modal-name">Your Full Name <span class="required-star">*</span></label>
+              <input type="text" id="modal-name" name="name" class="form-control" required placeholder="e.g. Fatima Ali">
+              <div class="form-error-msg">Please enter your name.</div>
+            </div>
+            <div class="form-group">
+              <label for="modal-email">Email Address <span class="required-star">*</span></label>
+              <input type="email" id="modal-email" name="email" class="form-control" required placeholder="fatima@example.com">
+              <div class="form-error-msg">Please enter a valid email.</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="modal-phone">Phone / WhatsApp (Optional)</label>
+            <input type="tel" id="modal-phone" name="phone" class="form-control" placeholder="03XX-XXXXXXX">
+            <div class="form-error-msg">Please enter a valid contact number.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="modal-message">Your Message or Customization Details <span class="required-star">*</span></label>
+            <textarea id="modal-message" name="message" class="form-control" rows="3" required placeholder="Let us know your preferred chain length, flower choice, initial letter, or destination city in Pakistan..."></textarea>
+            <div class="form-error-msg">Please leave a brief note.</div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Send Inquiry</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="footer-logo-wrap">
+            <picture>
+              <source srcset="assets/images/logo.webp" type="image/webp">
+              <img src="assets/images/logo.jpg" alt="Mankashay Logo" class="footer-logo-img" width="42" height="42">
+            </picture>
+            <span class="footer-brand-name">MANKASHAY</span>
+          </a>
+          <p class="footer-bio">Handmade resin art and botanical floral preservation. Incubated at BIC MUET, shipping across Pakistan.</p>
+          <div class="footer-bic-badge">Incubated at BIC MUET, Jamshoro</div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="shop.html">Shop Catalog</a></li>
+            <li><a href="custom-orders.html">Custom Orders</a></li>
+            <li><a href="workshops.html">Workshops & Collabs</a></li>
+            <li><a href="about.html">Our Story</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Collections</h4>
+          <ul class="footer-links">
+            <li><a href="shop.html?cat=pendants">Botanical Pendants</a></li>
+            <li><a href="shop.html?cat=keychains">Letter Keychains</a></li>
+            <li><a href="custom-orders.html">Flower Preservations</a></li>
+            <li><a href="shop.html?cat=other">Resin Vanity Trays</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Get in Touch</h4>
+          <div class="footer-contact-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+            <a href="https://instagram.com/mankashay_" target="_blank" rel="noopener noreferrer">@mankashay_</a>
+          </div>
+          <div class="footer-contact-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            <a href="mailto:mankashay.art@gmail.com">mankashay.art@gmail.com</a>
+          </div>
+          <div class="footer-contact-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="1" y="3" width="15" height="13"></rect>
+              <polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon>
+              <circle cx="5.5" cy="18.5" r="2.5"></circle>
+              <circle cx="18.5" cy="18.5" r="2.5"></circle>
+            </svg>
+            <span>Express delivery across Pakistan</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; <span id="current-year">2026</span> Mankashay. Art that lasts forever. All rights reserved.</div>
+        <div>Crafted with love at BIC MUET &bull; Jamshoro, Pakistan</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/forms.js"></script>
+  
+  <!-- Shop Specific Dynamic Loader & Filter Logic -->
+  <script>
+    (function initShop() {
+      const grid = document.getElementById('products-grid');
+      const filterChips = document.querySelectorAll('.filter-chip');
+      const statusEl = document.getElementById('shop-status-message');
+
+      // Filter click behavior
+      filterChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          filterChips.forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          const filter = chip.dataset.filter;
+          filterCards(filter);
+        });
+      });
+
+      function filterCards(filter) {
+        const cards = grid.querySelectorAll('.product-card');
+        cards.forEach(card => {
+          const cat = card.dataset.category;
+          if (filter === 'all' || cat === filter) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      }
+
+      // Check URL param ?cat=...
+      const urlParams = new URLSearchParams(window.location.search);
+      const initialCat = urlParams.get('cat');
+      if (initialCat) {
+        const matchingChip = Array.from(filterChips).find(c => c.dataset.filter === initialCat);
+        if (matchingChip) {
+          matchingChip.click();
+        }
+      }
+
+      // Supabase Dynamic Fetch (if configured)
+      async function loadSupabaseProducts() {
+        if (
+          typeof supabaseClient === 'undefined' ||
+          supabaseClient === null ||
+          typeof SUPABASE_URL === 'undefined' ||
+          SUPABASE_URL.includes('YOUR_PROJECT_ID')
+        ) {
+          return; // Use static fallback already in DOM
+        }
+
+        try {
+          const { data, error } = await supabaseClient
+            .from('products')
+            .select('*')
+            .eq('is_active', true)
+            .order('sort_order', { ascending: true });
+
+          if (error) throw error;
+          if (data && data.length > 0) {
+            renderDynamicProducts(data);
+          }
+        } catch (err) {
+          console.warn('[Mankashay] Supabase fetch fallback to static collection:', err);
+        }
+      }
+
+      function renderDynamicProducts(products) {
+        grid.innerHTML = products.map(p => {
+          const catLabel = p.category === 'other' ? 'Custom Art' : p.category;
+          const imgSrc = p.image_url || 'assets/images/pendant-rose-petal.webp';
+          const priceDisplay = p.price ? `<span>Rs.</span>${Number(p.price).toLocaleString()}` : 'Inquire';
+
+          return `
+            <article class="product-card fade-in-up is-revealed" data-category="${p.category}">
+              <div class="product-media">
+                <img src="${imgSrc}" alt="${p.name}" class="product-image" width="800" height="800" loading="lazy">
+                <span class="product-badge">${catLabel}</span>
+              </div>
+              <div class="product-body">
+                <h3 class="product-title">${p.name}</h3>
+                <p class="product-desc">${p.description || 'Handcrafted botanical resin piece.'}</p>
+                <div class="product-footer">
+                  <div class="product-price">${priceDisplay}</div>
+                  <button class="btn btn-outline-rose btn-sm" onclick="inquireAboutProduct('${p.name.replace(/'/g, "\\'")}', '${p.category}')">Inquire</button>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join('');
+
+        // Re-apply active filter
+        const activeChip = document.querySelector('.filter-chip.active');
+        if (activeChip) {
+          filterCards(activeChip.dataset.filter);
+        }
+      }
+
+      loadSupabaseProducts();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Mankashay (Private)</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="alternate icon" type="image/png" href="assets/favicon.png">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="admin-body">
+  <!-- Accessibility Skip Link -->
+  <a href="#admin-main" class="skip-link">Skip to admin main</a>
+
+  <!-- Demo / Setup Notification Banner -->
+  <div id="demo-mode-banner" style="display: none; background: #FFF3CD; border-bottom: 1px solid #FFE69C; color: #856404; padding: 0.65rem 1rem; text-align: center; font-size: 0.86rem; z-index: 1000; position: relative;">
+    <strong>Notice:</strong> Supabase keys not detected in <code>js/supabase-config.js</code>. The admin dashboard is running in <strong>Interactive Demo Mode</strong> with sample data. Configure your real keys to persist data to Supabase Postgres.
+  </div>
+
+  <!-- AUTH SECTION (Login Form) -->
+  <section id="admin-auth-section" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem;">
+    <div style="width: 100%; max-width: 440px;" class="fade-in-up is-revealed">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <a href="index.html" style="display: inline-flex; align-items: center; gap: 0.75rem; text-decoration: none;">
+          <img src="assets/images/logo.webp" alt="Mankashay Logo" width="48" height="48" style="border-radius: 50%; border: 1.5px solid var(--border-vintage);">
+          <span style="font-family: var(--font-serif); font-size: 1.8rem; letter-spacing: 0.15em; color: var(--primary-plum); font-weight: 700;">MANKASHAY</span>
+        </a>
+        <div style="font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-muted); margin-top: 4px;">
+          Private Management Portal
+        </div>
+      </div>
+
+      <div class="form-card">
+        <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem; text-align: center;">Sign In</h2>
+        <p style="text-align: center; font-size: 0.88rem; margin-bottom: 1.5rem;">Enter your Supabase admin credentials below.</p>
+
+        <div id="admin-login-error" class="form-alert is-error" style="display: none;"></div>
+
+        <form id="admin-login-form" novalidate>
+          <div class="form-group">
+            <label for="login-email">Email Address <span class="required-star">*</span></label>
+            <input type="email" id="login-email" class="form-control" required placeholder="admin@mankashay.com" autocomplete="username">
+          </div>
+
+          <div class="form-group">
+            <label for="login-password">Password <span class="required-star">*</span></label>
+            <input type="password" id="login-password" class="form-control" required placeholder="••••••••" autocomplete="current-password">
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+            Sign In to Dashboard
+          </button>
+        </form>
+
+        <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid var(--border-card); padding-top: 1.25rem;">
+          <button id="btn-demo-preview" class="btn btn-secondary btn-sm" style="width: 100%;">
+            Preview Dashboard with Sample Data
+          </button>
+          <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 0.75rem;">
+            To set up your real admin user, see the instructions in <code>README.md</code>.
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 1.5rem;">
+        <a href="index.html" style="font-size: 0.86rem; color: var(--primary-plum);">&larr; Return to public website</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD SECTION (Shown after successful login or demo preview) -->
+  <div id="admin-dashboard-section" style="display: none;">
+    
+    <!-- Top Admin Bar -->
+    <header class="admin-header" role="banner">
+      <div class="container admin-header-flex">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <a href="index.html" target="_blank" title="View live site in new tab" style="display: flex; align-items: center; gap: 0.6rem; text-decoration: none;">
+            <img src="assets/images/logo.webp" alt="Mankashay" width="36" height="36" style="border-radius: 50%;">
+            <div>
+              <strong style="font-family: var(--font-serif); font-size: 1.25rem; letter-spacing: 0.12em; color: var(--primary-plum); display: block; line-height: 1;">MANKASHAY</strong>
+              <span style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Admin Workspace</span>
+            </div>
+          </a>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <span style="font-size: 0.84rem; color: var(--text-muted);">
+            Logged in as: <strong id="admin-user-email" style="color: var(--primary-plum);">admin@mankashay.com</strong>
+          </span>
+          <button id="btn-sign-out" class="btn btn-secondary btn-sm">
+            Sign Out
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Admin Main Body -->
+    <main id="admin-main" style="padding: 2rem 0 4rem 0;">
+      <div class="container">
+        
+        <!-- Tab Navigation -->
+        <div class="admin-tabs" role="tablist">
+          <button class="admin-tab-btn active" data-tab="inquiries" role="tab" aria-selected="true">
+            Inquiries &amp; Orders
+          </button>
+          <button class="admin-tab-btn" data-tab="products" role="tab" aria-selected="false">
+            Products Catalog
+          </button>
+          <button class="admin-tab-btn" data-tab="events" role="tab" aria-selected="false">
+            Workshops &amp; Events
+          </button>
+        </div>
+
+        <!-- TAB 1: INQUIRIES & ORDERS -->
+        <section id="tab-content-inquiries" class="admin-tab-content">
+          
+          <!-- Stat Cards -->
+          <div class="admin-stats-grid">
+            <div class="stat-card">
+              <span class="stat-title">Total Inquiries</span>
+              <span class="stat-number" id="stat-total">0</span>
+            </div>
+            <div class="stat-card" style="border-left: 4px solid #1068BF;">
+              <span class="stat-title">New / Unread</span>
+              <span class="stat-number" id="stat-new" style="color: #1068BF;">0</span>
+            </div>
+            <div class="stat-card" style="border-left: 4px solid #8F5B00;">
+              <span class="stat-title">In Discussion</span>
+              <span class="stat-number" id="stat-contacted" style="color: #8F5B00;">0</span>
+            </div>
+            <div class="stat-card" style="border-left: 4px solid #137333;">
+              <span class="stat-title">Completed / Closed</span>
+              <span class="stat-number" id="stat-closed" style="color: #137333;">0</span>
+            </div>
+          </div>
+
+          <!-- Filter & Search Controls -->
+          <div style="background: #FFFFFF; padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-card); margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between;">
+            <div style="flex: 1; min-width: 240px;">
+              <input type="search" id="inquiries-search" class="form-control" placeholder="Search customer name, email, phone, or message...">
+            </div>
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+              <select id="inquiries-filter-status" class="form-control" style="width: auto;">
+                <option value="all">All Statuses</option>
+                <option value="new">New</option>
+                <option value="contacted">Contacted</option>
+                <option value="closed">Closed</option>
+              </select>
+              <select id="inquiries-filter-type" class="form-control" style="width: auto;">
+                <option value="all">All Types</option>
+                <option value="preservation">Flower Preservations</option>
+                <option value="custom_order">Custom Orders</option>
+                <option value="workshop">Workshop Signups</option>
+                <option value="contact">Contact Messages</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Inquiries Data Table -->
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Customer</th>
+                  <th>Type &amp; Piece</th>
+                  <th>Message &amp; Sentiments</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody id="inquiries-table-body">
+                <!-- Populated dynamically by admin.js -->
+              </tbody>
+            </table>
+          </div>
+
+        </section>
+
+        <!-- TAB 2: PRODUCTS CATALOG MANAGEMENT -->
+        <section id="tab-content-products" class="admin-tab-content" style="display: none;">
+          <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 2rem; align-items: start;">
+            
+            <!-- Products Table -->
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Image</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Visibility</th>
+                    <th>Delete</th>
+                  </tr>
+                </thead>
+                <tbody id="products-table-body">
+                  <!-- Populated by admin.js -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Add Product Card -->
+            <div class="form-card">
+              <h3 style="font-size: 1.35rem; margin-bottom: 1.25rem;">Add New Product</h3>
+              <form id="add-product-form">
+                <div class="form-group">
+                  <label for="new-prod-name">Product Name *</label>
+                  <input type="text" id="new-prod-name" class="form-control" required placeholder="e.g. Lavender Blossom Locket">
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="new-prod-price">Price (PKR)</label>
+                    <input type="number" id="new-prod-price" class="form-control" placeholder="1850">
+                  </div>
+                  <div class="form-group">
+                    <label for="new-prod-cat">Category *</label>
+                    <select id="new-prod-cat" class="form-control" required>
+                      <option value="pendants">Pendants</option>
+                      <option value="keychains">Keychains</option>
+                      <option value="preservations">Preservations</option>
+                      <option value="other">Custom Art / Other</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="new-prod-image">Image Path</label>
+                  <input type="text" id="new-prod-image" class="form-control" placeholder="assets/images/pendant-rose-petal.webp">
+                </div>
+                <div class="form-group">
+                  <label for="new-prod-desc">Short Description</label>
+                  <textarea id="new-prod-desc" class="form-control" rows="3" placeholder="Materials, chain, botanicals..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Save to Catalog</button>
+              </form>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- TAB 3: WORKSHOPS & EVENTS MANAGEMENT -->
+        <section id="tab-content-events" class="admin-tab-content" style="display: none;">
+          <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 2rem; align-items: start;">
+            
+            <!-- Events Table -->
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Workshop Title</th>
+                    <th>Date</th>
+                    <th>Venue</th>
+                    <th>Status</th>
+                    <th>Delete</th>
+                  </tr>
+                </thead>
+                <tbody id="events-table-body">
+                  <!-- Populated by admin.js -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Add Event Card -->
+            <div class="form-card">
+              <h3 style="font-size: 1.35rem; margin-bottom: 1.25rem;">Schedule New Workshop</h3>
+              <form id="add-event-form">
+                <div class="form-group">
+                  <label for="new-event-title">Workshop Title *</label>
+                  <input type="text" id="new-event-title" class="form-control" required placeholder="e.g. Resin Coaster Masterclass">
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="new-event-date">Event Date</label>
+                    <input type="date" id="new-event-date" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label for="new-event-venue">Venue / Location</label>
+                    <input type="text" id="new-event-venue" class="form-control" placeholder="BIC MUET, Jamshoro">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="new-event-desc">Description &amp; Highlights</label>
+                  <textarea id="new-event-desc" class="form-control" rows="3" placeholder="Covering epoxy chemistry, safety gear, materials provided..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Schedule Event</button>
+              </form>
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
