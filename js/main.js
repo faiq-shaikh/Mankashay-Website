@@ -61,6 +61,13 @@
         closeMenu();
       }
     });
+
+    // Close mobile drawer if window expands beyond mobile/tablet breakpoint (e.g. window snapped/resized)
+    window.addEventListener('resize', function () {
+      if (window.innerWidth > 1024 && mainNav.classList.contains('is-open')) {
+        closeMenu();
+      }
+    }, { passive: true });
   }
 
   // --- 3. HEADER SCROLL EFFECT ---
