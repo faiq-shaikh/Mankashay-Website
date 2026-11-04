@@ -611,28 +611,11 @@ img, svg, picture {
   position: relative;
 }
 
-.hero-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-vintage);
-  padding: 0.38rem 0.95rem;
-  border-radius: var(--radius-full);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--primary-plum);
-  margin-bottom: 1.25rem;
-  box-shadow: var(--shadow-sm);
-}
-
 /* --- HERO HEADLINE LOOPING ANIMATION --- */
 .hero-title {
-  margin-bottom: 1.15rem;
+  margin-bottom: 1.25rem;
   position: relative;
-  display: inline-block;
+  display: block;
 }
 
 .hero-title-main {
