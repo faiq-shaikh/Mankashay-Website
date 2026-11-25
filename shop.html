@@ -445,14 +445,24 @@
         }
       }
 
-      // Supabase Dynamic Fetch (if configured)
+      // Supabase Dynamic Fetch (if configured) or Local Demo Storage
       async function loadSupabaseProducts() {
+        const localProducts = localStorage.getItem('mankashay_admin_products');
         if (
           typeof supabaseClient === 'undefined' ||
           supabaseClient === null ||
           typeof SUPABASE_URL === 'undefined' ||
           SUPABASE_URL.includes('YOUR_PROJECT_ID')
         ) {
+          if (localProducts) {
+            try {
+              const parsed = JSON.parse(localProducts);
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                renderDynamicProducts(parsed.filter(p => p.is_active));
+                return;
+              }
+            } catch (e) {}
+          }
           return; // Use static fallback already in DOM
         }
 
@@ -469,6 +479,14 @@
           }
         } catch (err) {
           console.warn('[Mankashay] Supabase fetch fallback to static collection:', err);
+          if (localProducts) {
+            try {
+              const parsed = JSON.parse(localProducts);
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                renderDynamicProducts(parsed.filter(p => p.is_active));
+              }
+            } catch (e) {}
+          }
         }
       }
 
@@ -477,19 +495,27 @@
           const catLabel = p.category === 'other' ? 'Custom Art' : p.category;
           const imgSrc = p.image_url || 'assets/images/pendant-rose-petal.webp';
           const priceDisplay = p.price ? `<span>Rs.</span>${Number(p.price).toLocaleString()}` : 'Inquire';
+          const isOutOfStock = p.quantity !== undefined && p.quantity !== null && Number(p.quantity) <= 0;
+          const stockNote = isOutOfStock
+            ? '<span class="badge-stock out-stock" style="margin-left: 0.5rem; font-size: 0.7rem;">Out of Stock</span>'
+            : (p.quantity !== undefined && Number(p.quantity) <= 3 && Number(p.quantity) > 0)
+              ? `<span class="badge-stock low-stock" style="margin-left: 0.5rem; font-size: 0.7rem;">Only ${p.quantity} left</span>`
+              : '';
 
           return `
             <article class="product-card fade-in-up is-revealed" data-category="${p.category}">
               <div class="product-media">
-                <img src="${imgSrc}" alt="${p.name}" class="product-image" width="800" height="800" loading="lazy">
+                <img src="${imgSrc}" alt="${p.name}" class="product-image" width="800" height="800" loading="lazy" onerror="this.onerror=null; this.src='assets/images/pendant-rose-petal.webp';">
                 <span class="product-badge">${catLabel}</span>
               </div>
               <div class="product-body">
                 <h3 class="product-title">${p.name}</h3>
                 <p class="product-desc">${p.description || 'Handcrafted botanical resin piece.'}</p>
                 <div class="product-footer">
-                  <div class="product-price">${priceDisplay}</div>
-                  <button class="btn btn-outline-rose btn-sm" onclick="inquireAboutProduct('${p.name.replace(/'/g, "\\'")}', '${p.category}')">Inquire</button>
+                  <div class="product-price">${priceDisplay}${stockNote}</div>
+                  <button class="btn btn-outline-rose btn-sm" onclick="inquireAboutProduct('${p.name.replace(/'/g, "\\'")}', '${p.category}')">
+                    ${isOutOfStock ? 'Order Custom' : 'Inquire'}
+                  </button>
                 </div>
               </div>
             </article>

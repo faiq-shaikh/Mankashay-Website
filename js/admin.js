@@ -397,38 +397,113 @@
       id: 'p-1',
       name: 'Rose Petal Teardrop Pendant',
       price: 1850,
+      quantity: 8,
       category: 'pendants',
       image_url: 'assets/images/pendant-rose-petal.webp',
-      is_active: true
+      description: 'Handcrafted teardrop pendant encasing deep crimson dried rose petals with subtle 18k gold foil flecks. Finished with an 18-inch gold-plated stainless steel chain.',
+      is_active: true,
+      sort_order: 1
     },
     {
       id: 'p-2',
       name: 'Forget-Me-Not Oval Pendant',
       price: 2100,
+      quantity: 5,
       category: 'pendants',
       image_url: 'assets/images/pendant-forgetmenot.webp',
-      is_active: true
+      description: 'Delicate sky-blue forget-me-not blossoms suspended in high-clarity UV-resistant resin with a vintage filigree bronze bezel.',
+      is_active: true,
+      sort_order: 2
     },
     {
       id: 'p-3',
       name: 'Botanical Letter Keychain',
       price: 1200,
+      quantity: 14,
       category: 'keychains',
       image_url: 'assets/images/keychain-goldflake.webp',
-      is_active: true
+      description: 'Personalized resin initial keychain with dried white gypsophila (baby\'s breath) and golden leaf accents. Includes alloy keyring and tassel.',
+      is_active: true,
+      sort_order: 3
     },
     {
       id: 'p-4',
+      name: 'Dried Daisy Bar Keychain',
+      price: 1350,
+      quantity: 6,
+      category: 'keychains',
+      image_url: 'assets/images/keychain-daisy.webp',
+      description: 'Sleek geometric resin bar featuring an intact miniature dried wild daisy. Durable and waterproof.',
+      is_active: true,
+      sort_order: 4
+    },
+    {
+      id: 'p-5',
       name: 'Bridal Garland Keepsake Frame',
       price: 8500,
+      quantity: 2,
       category: 'preservations',
       image_url: 'assets/images/preservation-bridal-frame.webp',
-      is_active: true
+      description: 'Everlasting custom preservation of your Nikkah or wedding floral garland in a solid 6x6" resin block.',
+      is_active: true,
+      sort_order: 5
+    },
+    {
+      id: 'p-6',
+      name: 'Rose Petal Keepsake Heart',
+      price: 4200,
+      quantity: 4,
+      category: 'preservations',
+      image_url: 'assets/images/preservation-anniversary-heart.webp',
+      description: 'Freestanding resin heart preserving precious anniversary or milestone petals with delicate pearl shimmer.',
+      is_active: true,
+      sort_order: 6
+    },
+    {
+      id: 'p-7',
+      name: 'Coastal Bloom Resin Vanity Tray',
+      price: 5400,
+      quantity: 3,
+      category: 'other',
+      image_url: 'assets/images/art-ocean-tray.webp',
+      description: 'Handmade decorative tray with genuine dried lavender, rose petals, and shimmering mica waves with brass handles.',
+      is_active: true,
+      sort_order: 7
+    },
+    {
+      id: 'p-8',
+      name: 'Botanical Floral Bookmark',
+      price: 950,
+      quantity: 10,
+      category: 'other',
+      image_url: 'assets/images/art-floral-bookmark.webp',
+      description: 'Slim and ultra-durable resin bookmark with hand-pressed wild blooms and a hand-tied blush silk tassel.',
+      is_active: true,
+      sort_order: 8
     }
   ];
 
-  async function fetchProducts() {
+  function persistProductsDemo() {
     if (!isSupabaseConfigured() || isDemoMode) {
+      try {
+        localStorage.setItem('mankashay_admin_products', JSON.stringify(allProducts));
+      } catch (e) {
+        console.warn('[Admin] LocalStorage save error:', e);
+      }
+    }
+  }
+
+  async function fetchProducts() {
+    const savedDemo = localStorage.getItem('mankashay_admin_products');
+    if (!isSupabaseConfigured() || isDemoMode) {
+      if (savedDemo) {
+        try {
+          allProducts = JSON.parse(savedDemo);
+          return;
+        } catch (e) {
+          console.warn('[Admin] Error reading stored products:', e);
+        }
+      }
       allProducts = [...defaultProducts];
       return;
     }
@@ -443,6 +518,12 @@
       allProducts = data && data.length > 0 ? data : [...defaultProducts];
     } catch (err) {
       console.warn('[Admin] Fetch products error:', err);
+      if (savedDemo) {
+        try {
+          allProducts = JSON.parse(savedDemo);
+          return;
+        } catch (e) {}
+      }
       allProducts = [...defaultProducts];
     }
   }
@@ -451,40 +532,106 @@
     const tbody = document.getElementById('products-table-body');
     if (!tbody) return;
 
-    if (allProducts.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem;">No products found.</td></tr>';
+    const searchQuery = (document.getElementById('products-search')?.value || '').toLowerCase().trim();
+    const filterCat = document.getElementById('products-filter-category')?.value || 'all';
+    const filterStock = document.getElementById('products-filter-stock')?.value || 'all';
+    const filterStatus = document.getElementById('products-filter-status')?.value || 'all';
+
+    const filtered = allProducts.filter((p) => {
+      const pName = (p.name || '').toLowerCase();
+      const pCat = (p.category || '').toLowerCase();
+      const pDesc = (p.description || '').toLowerCase();
+
+      const matchesSearch = !searchQuery || pName.includes(searchQuery) || pCat.includes(searchQuery) || pDesc.includes(searchQuery);
+      const matchesCat = filterCat === 'all' || p.category === filterCat;
+      
+      const qty = p.quantity !== undefined && p.quantity !== null ? Number(p.quantity) : 1;
+      let matchesStock = true;
+      if (filterStock === 'in_stock') matchesStock = qty > 3;
+      else if (filterStock === 'low_stock') matchesStock = qty > 0 && qty <= 3;
+      else if (filterStock === 'out_stock') matchesStock = qty <= 0;
+
+      let matchesStatus = true;
+      if (filterStatus === 'active') matchesStatus = !!p.is_active;
+      else if (filterStatus === 'hidden') matchesStatus = !p.is_active;
+
+      return matchesSearch && matchesCat && matchesStock && matchesStatus;
+    });
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2.5rem; color: var(--text-muted);">No products match your current filters.</td></tr>';
       return;
     }
 
-    tbody.innerHTML = allProducts
-      .map((p) => `
-        <tr>
-          <td>
-            <img src="${p.image_url || 'assets/images/pendant-rose-petal.webp'}" alt="${escapeHtml(p.name)}" 
-                 style="width: 44px; height: 44px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-card);">
-          </td>
-          <td>
-            <strong>${escapeHtml(p.name)}</strong>
-            <div style="font-size: 0.78rem; text-transform: uppercase; color: var(--accent-rose);">${escapeHtml(p.category)}</div>
-          </td>
-          <td>Rs. ${p.price ? Number(p.price).toLocaleString() : 'Inquire'}</td>
-          <td>
-            <button class="btn btn-sm ${p.is_active ? 'btn-primary' : 'btn-secondary'} btn-toggle-product" 
-                    data-id="${p.id}" style="min-height: 32px; font-size: 0.76rem;">
-              ${p.is_active ? 'Active (Visible)' : 'Hidden'}
-            </button>
-          </td>
-          <td>
-            <button class="btn-icon-action btn-delete-product" data-id="${p.id}" title="Delete Product">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="3 6 5 6 21 6"></polyline>
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-              </svg>
-            </button>
-          </td>
-        </tr>
-      `)
+    tbody.innerHTML = filtered
+      .map((p) => {
+        const qty = p.quantity !== undefined && p.quantity !== null ? Number(p.quantity) : 0;
+        let stockBadge = '';
+        if (qty > 3) {
+          stockBadge = `<span class="badge-stock in-stock"><span style="width: 6px; height: 6px; border-radius: 50%; background: #137333;"></span>${qty} in stock</span>`;
+        } else if (qty > 0) {
+          stockBadge = `<span class="badge-stock low-stock"><span style="width: 6px; height: 6px; border-radius: 50%; background: #8F5B00;"></span>Low (${qty})</span>`;
+        } else {
+          stockBadge = `<span class="badge-stock out-stock"><span style="width: 6px; height: 6px; border-radius: 50%; background: #C0264D;"></span>Out of stock (0)</span>`;
+        }
+
+        const catDisplay = p.category === 'other' ? 'Custom Art' : p.category;
+
+        return `
+          <tr data-id="${p.id}">
+            <td>
+              <img src="${p.image_url || 'assets/images/pendant-rose-petal.webp'}" alt="${escapeHtml(p.name)}" 
+                   onerror="this.onerror=null; this.src='assets/images/pendant-rose-petal.webp';"
+                   style="width: 46px; height: 46px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-card); display: block;">
+            </td>
+            <td style="max-width: 240px;">
+              <strong style="color: var(--text-dark); display: block; line-height: 1.25;">${escapeHtml(p.name)}</strong>
+              <div style="font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent-rose); margin-top: 2px;">
+                ${escapeHtml(catDisplay)}
+              </div>
+              ${p.description ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px;">${escapeHtml(p.description)}</div>` : ''}
+            </td>
+            <td style="white-space: nowrap; font-weight: 600; color: var(--primary-plum);">
+              ${p.price !== null && p.price !== undefined ? 'Rs. ' + Number(p.price).toLocaleString() : '<span style="color: var(--text-muted); font-weight: 400;">Inquire</span>'}
+            </td>
+            <td>
+              ${stockBadge}
+            </td>
+            <td>
+              <button class="btn btn-sm ${p.is_active ? 'btn-primary' : 'btn-secondary'} btn-toggle-product" 
+                      data-id="${p.id}" style="min-height: 32px; font-size: 0.75rem; padding: 0.3rem 0.65rem;" title="Click to toggle visibility">
+                ${p.is_active ? 'Active' : 'Hidden'}
+              </button>
+            </td>
+            <td style="text-align: right; white-space: nowrap;">
+              <div style="display: inline-flex; align-items: center; gap: 0.4rem;">
+                <button class="btn-icon-edit btn-edit-product" data-id="${p.id}" title="Edit product attributes (image, price, stock quantity, etc.)">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M12 20h9"></path>
+                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                  </svg>
+                  <span>Edit</span>
+                </button>
+                <button class="btn-icon-action btn-delete-product" data-id="${p.id}" title="Delete Product">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      })
       .join('');
+
+    // Attach row events
+    tbody.querySelectorAll('.btn-edit-product').forEach((btn) => {
+      btn.addEventListener('click', function () {
+        const id = this.dataset.id;
+        openEditProductModal(id);
+      });
+    });
 
     tbody.querySelectorAll('.btn-toggle-product').forEach((btn) => {
       btn.addEventListener('click', async function () {
@@ -499,11 +646,56 @@
     tbody.querySelectorAll('.btn-delete-product').forEach((btn) => {
       btn.addEventListener('click', async function () {
         const id = this.dataset.id;
-        if (confirm('Delete this product?')) {
+        const prod = allProducts.find((p) => p.id === id);
+        const name = prod ? prod.name : 'this product';
+        if (confirm(`Are you sure you want to delete "${name}" from the catalog?`)) {
           await deleteProduct(id);
         }
       });
     });
+  }
+
+  // Open Edit Product Modal with filled attributes
+  function openEditProductModal(id) {
+    const prod = allProducts.find((p) => p.id === id);
+    if (!prod) {
+      showToast('Product not found.', 'error');
+      return;
+    }
+
+    const modal = document.getElementById('edit-product-modal');
+    if (!modal) return;
+
+    document.getElementById('edit-prod-id').value = prod.id || '';
+    document.getElementById('edit-prod-name').value = prod.name || '';
+    document.getElementById('edit-prod-price').value = prod.price !== null && prod.price !== undefined ? prod.price : '';
+    document.getElementById('edit-prod-qty').value = prod.quantity !== undefined && prod.quantity !== null ? prod.quantity : 1;
+    document.getElementById('edit-prod-cat').value = prod.category || 'pendants';
+    document.getElementById('edit-prod-status').value = prod.is_active ? 'true' : 'false';
+    document.getElementById('edit-prod-image').value = prod.image_url || '';
+    document.getElementById('edit-prod-desc').value = prod.description || '';
+    document.getElementById('edit-prod-sort').value = prod.sort_order !== undefined ? prod.sort_order : 1;
+
+    // Reset helper controls
+    const presetSelect = document.getElementById('edit-prod-image-preset');
+    if (presetSelect) presetSelect.value = '';
+    const fileLabel = document.getElementById('edit-prod-file-name');
+    if (fileLabel) fileLabel.textContent = '';
+    const fileInput = document.getElementById('edit-prod-file-input');
+    if (fileInput) fileInput.value = '';
+
+    // Update live preview
+    const preview = document.getElementById('edit-prod-preview');
+    if (preview) {
+      preview.src = prod.image_url || 'assets/images/pendant-rose-petal.webp';
+      preview.onerror = function () {
+        this.src = 'assets/images/pendant-rose-petal.webp';
+      };
+    }
+
+    if (window.openModal) {
+      window.openModal('edit-product-modal');
+    }
   }
 
   async function toggleProductActive(id, newStatus) {
@@ -512,14 +704,15 @@
         const { error } = await supabaseClient.from('products').update({ is_active: newStatus }).eq('id', id);
         if (error) throw error;
       } catch (err) {
-        showToast('Error updating product status', 'error');
+        showToast('Error updating product status in Supabase', 'error');
         return;
       }
     }
     const p = allProducts.find((item) => item.id === id);
     if (p) p.is_active = newStatus;
+    persistProductsDemo();
     renderProducts();
-    showToast('Product visibility updated', 'success');
+    showToast(`Product visibility updated to ${newStatus ? 'Active' : 'Hidden'}`, 'success');
   }
 
   async function deleteProduct(id) {
@@ -528,41 +721,146 @@
         const { error } = await supabaseClient.from('products').delete().eq('id', id);
         if (error) throw error;
       } catch (err) {
-        showToast('Error deleting product', 'error');
+        showToast('Error deleting product from Supabase', 'error');
         return;
       }
     }
     allProducts = allProducts.filter((p) => p.id !== id);
+    persistProductsDemo();
     renderProducts();
-    showToast('Product removed', 'info');
+    showToast('Product removed from catalog', 'info');
   }
 
-  // Add Product Form
+  // --- EDIT PRODUCT FORM SUBMIT ---
+  const editProductForm = document.getElementById('edit-product-form');
+  if (editProductForm) {
+    editProductForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const id = document.getElementById('edit-prod-id').value;
+      const name = document.getElementById('edit-prod-name').value.trim();
+      const priceRaw = document.getElementById('edit-prod-price').value;
+      const price = priceRaw !== '' ? parseFloat(priceRaw) : null;
+      const qtyRaw = document.getElementById('edit-prod-qty').value;
+      const quantity = qtyRaw !== '' ? parseInt(qtyRaw, 10) : 0;
+      const category = document.getElementById('edit-prod-cat').value;
+      const is_active = document.getElementById('edit-prod-status').value === 'true';
+      const image_url = document.getElementById('edit-prod-image').value.trim() || 'assets/images/pendant-rose-petal.webp';
+      const description = document.getElementById('edit-prod-desc').value.trim();
+      const sort_order = parseInt(document.getElementById('edit-prod-sort').value, 10) || 0;
+
+      if (!name) {
+        showToast('Product name is required.', 'error');
+        return;
+      }
+
+      const saveBtn = document.getElementById('btn-save-product-edit');
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving Changes...';
+      }
+
+      const updatedFields = {
+        name,
+        price,
+        quantity,
+        category,
+        is_active,
+        image_url,
+        description,
+        sort_order
+      };
+
+      if (isSupabaseConfigured() && !isDemoMode) {
+        try {
+          const { error } = await supabaseClient
+            .from('products')
+            .update(updatedFields)
+            .eq('id', id);
+
+          if (error) {
+            // Handle scenario if remote database doesn't have quantity column yet
+            if (error.message && error.message.toLowerCase().includes('quantity')) {
+              console.warn('[Admin] Remote Supabase table does not have quantity column yet. Retrying without quantity.');
+              const { quantity: _, ...fallbackFields } = updatedFields;
+              const retry = await supabaseClient.from('products').update(fallbackFields).eq('id', id);
+              if (retry.error) throw retry.error;
+            } else {
+              throw error;
+            }
+          }
+        } catch (err) {
+          console.error('[Admin] Update product error:', err);
+          showToast('Failed to save to Supabase: ' + err.message, 'error');
+          if (saveBtn) {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Save Changes';
+          }
+          return;
+        }
+      }
+
+      // Update in local state
+      const idx = allProducts.findIndex((p) => p.id === id);
+      if (idx !== -1) {
+        allProducts[idx] = { ...allProducts[idx], ...updatedFields };
+      }
+      persistProductsDemo();
+
+      if (saveBtn) {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save Changes';
+      }
+
+      if (window.closeModal) {
+        window.closeModal('edit-product-modal');
+      }
+
+      renderProducts();
+      showToast(`Product "${name}" updated successfully!`, 'success');
+    });
+  }
+
+  // --- ADD PRODUCT FORM SUBMIT ---
   const addProductForm = document.getElementById('add-product-form');
   if (addProductForm) {
     addProductForm.addEventListener('submit', async function (e) {
       e.preventDefault();
       const name = document.getElementById('new-prod-name').value.trim();
-      const price = parseFloat(document.getElementById('new-prod-price').value) || null;
+      const priceRaw = document.getElementById('new-prod-price').value;
+      const price = priceRaw !== '' ? parseFloat(priceRaw) : null;
+      const qtyRaw = document.getElementById('new-prod-qty').value;
+      const quantity = qtyRaw !== '' ? parseInt(qtyRaw, 10) : 1;
       const category = document.getElementById('new-prod-cat').value;
       const imageUrl = document.getElementById('new-prod-image').value.trim() || 'assets/images/pendant-rose-petal.webp';
       const description = document.getElementById('new-prod-desc').value.trim();
+      const sortRaw = document.getElementById('new-prod-sort')?.value;
+      const sort_order = sortRaw !== '' && sortRaw !== undefined ? parseInt(sortRaw, 10) : allProducts.length + 1;
 
       const newProd = {
         name,
         price,
+        quantity,
         category,
         image_url: imageUrl,
         description,
         is_active: true,
-        sort_order: allProducts.length + 1
+        sort_order
       };
 
       if (isSupabaseConfigured() && !isDemoMode) {
         try {
-          const { data, error } = await supabaseClient.from('products').insert([newProd]).select();
+          let { data, error } = await supabaseClient.from('products').insert([newProd]).select();
+          if (error && error.message && error.message.toLowerCase().includes('quantity')) {
+            console.warn('[Admin] Remote Supabase table missing quantity column. Inserting without quantity.');
+            const { quantity: _, ...fallbackProd } = newProd;
+            const retry = await supabaseClient.from('products').insert([fallbackProd]).select();
+            data = retry.data;
+            error = retry.error;
+          }
           if (error) throw error;
-          if (data && data[0]) allProducts.push(data[0]);
+          if (data && data[0]) {
+            allProducts.push({ ...newProd, ...data[0] });
+          }
         } catch (err) {
           showToast('Error saving product to Supabase: ' + err.message, 'error');
           return;
@@ -572,10 +870,103 @@
         allProducts.push(newProd);
       }
 
+      persistProductsDemo();
       addProductForm.reset();
+
+      // Reset add form preview & presets
+      const addPreview = document.getElementById('new-prod-preview');
+      if (addPreview) addPreview.src = 'assets/images/pendant-rose-petal.webp';
+      const addFileName = document.getElementById('new-prod-file-name');
+      if (addFileName) addFileName.textContent = '';
+
       renderProducts();
-      showToast('Product added successfully!', 'success');
+      showToast(`Product "${name}" added to catalog!`, 'success');
     });
+  }
+
+  // --- IMAGE PREVIEW & PRESET CONTROLS INITIALIZATION ---
+  function initImageControls() {
+    // 1. Edit Modal Image Controls
+    const editImgInput = document.getElementById('edit-prod-image');
+    const editPresetSelect = document.getElementById('edit-prod-image-preset');
+    const editFileInput = document.getElementById('edit-prod-file-input');
+    const editFileName = document.getElementById('edit-prod-file-name');
+    const editPreview = document.getElementById('edit-prod-preview');
+
+    if (editImgInput && editPreview) {
+      editImgInput.addEventListener('input', function () {
+        editPreview.src = this.value.trim() || 'assets/images/pendant-rose-petal.webp';
+      });
+      editPreview.onerror = function () {
+        this.src = 'assets/images/pendant-rose-petal.webp';
+      };
+    }
+
+    if (editPresetSelect && editImgInput && editPreview) {
+      editPresetSelect.addEventListener('change', function () {
+        if (this.value) {
+          editImgInput.value = this.value;
+          editPreview.src = this.value;
+          if (editFileName) editFileName.textContent = '';
+        }
+      });
+    }
+
+    if (editFileInput && editImgInput && editPreview) {
+      editFileInput.addEventListener('change', function () {
+        const file = this.files && this.files[0];
+        if (file) {
+          if (editFileName) editFileName.textContent = file.name;
+          const reader = new FileReader();
+          reader.onload = function (evt) {
+            editImgInput.value = evt.target.result;
+            editPreview.src = evt.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    // 2. Add Form Image Controls
+    const addImgInput = document.getElementById('new-prod-image');
+    const addPresetSelect = document.getElementById('new-prod-image-preset');
+    const addFileInput = document.getElementById('new-prod-file-input');
+    const addFileName = document.getElementById('new-prod-file-name');
+    const addPreview = document.getElementById('new-prod-preview');
+
+    if (addImgInput && addPreview) {
+      addImgInput.addEventListener('input', function () {
+        addPreview.src = this.value.trim() || 'assets/images/pendant-rose-petal.webp';
+      });
+      addPreview.onerror = function () {
+        this.src = 'assets/images/pendant-rose-petal.webp';
+      };
+    }
+
+    if (addPresetSelect && addImgInput && addPreview) {
+      addPresetSelect.addEventListener('change', function () {
+        if (this.value) {
+          addImgInput.value = this.value;
+          addPreview.src = this.value;
+          if (addFileName) addFileName.textContent = '';
+        }
+      });
+    }
+
+    if (addFileInput && addImgInput && addPreview) {
+      addFileInput.addEventListener('change', function () {
+        const file = this.files && this.files[0];
+        if (file) {
+          if (addFileName) addFileName.textContent = file.name;
+          const reader = new FileReader();
+          reader.onload = function (evt) {
+            addImgInput.value = evt.target.result;
+            addPreview.src = evt.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
   }
 
   // --- 3. EVENTS MANAGEMENT ---
@@ -753,6 +1144,24 @@
     filterTypeEl.addEventListener('change', renderInquiries);
   }
 
+  // Products Search & Filter Listeners
+  const prodSearchInput = document.getElementById('products-search');
+  if (prodSearchInput) {
+    prodSearchInput.addEventListener('input', renderProducts);
+  }
+  const prodFilterCatEl = document.getElementById('products-filter-category');
+  if (prodFilterCatEl) {
+    prodFilterCatEl.addEventListener('change', renderProducts);
+  }
+  const prodFilterStockEl = document.getElementById('products-filter-stock');
+  if (prodFilterStockEl) {
+    prodFilterStockEl.addEventListener('change', renderProducts);
+  }
+  const prodFilterStatusEl = document.getElementById('products-filter-status');
+  if (prodFilterStatusEl) {
+    prodFilterStatusEl.addEventListener('change', renderProducts);
+  }
+
   // --- ADMIN TABS ---
   const tabButtons = document.querySelectorAll('.admin-tab-btn');
   tabButtons.forEach((btn) => {
@@ -784,6 +1193,7 @@
 
   // BOOTSTRAP
   document.addEventListener('DOMContentLoaded', function () {
+    initImageControls();
     checkSession();
   });
 })();

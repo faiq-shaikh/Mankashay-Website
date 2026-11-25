@@ -26,11 +26,15 @@ CREATE TABLE IF NOT EXISTS public.products (
     name TEXT NOT NULL,
     description TEXT,
     price NUMERIC,
+    quantity INTEGER DEFAULT 1 NOT NULL,
     image_url TEXT,
     category TEXT NOT NULL CHECK (category IN ('pendants', 'keychains', 'preservations', 'other')),
     is_active BOOLEAN DEFAULT true NOT NULL,
     sort_order INTEGER DEFAULT 0 NOT NULL
 );
+
+-- Migration if table already exists in an existing Supabase project:
+ALTER TABLE public.products ADD COLUMN IF NOT EXISTS quantity INTEGER DEFAULT 1;
 
 -- 3. Create EVENTS Table
 -- Manages workshops, exhibitions, and brand collaboration events
@@ -130,12 +134,13 @@ CREATE POLICY "Authenticated have full access to events"
 -- ==============================================================================
 
 -- Insert initial sample products
-INSERT INTO public.products (name, description, price, image_url, category, is_active, sort_order)
+INSERT INTO public.products (name, description, price, quantity, image_url, category, is_active, sort_order)
 VALUES
     (
         'Rose Petal Teardrop Pendant',
         'Handcrafted teardrop pendant encasing deep crimson dried rose petals with subtle 18k gold foil flecks. Finished with an 18-inch gold-plated stainless steel chain.',
         1850,
+        8,
         'assets/images/pendant-rose-petal.webp',
         'pendants',
         true,
@@ -145,6 +150,7 @@ VALUES
         'Forget-Me-Not Oval Pendant',
         'Delicate sky-blue forget-me-not blossoms suspended in high-clarity UV-resistant resin with a vintage filigree bronze bezel.',
         2100,
+        5,
         'assets/images/pendant-forgetmenot.webp',
         'pendants',
         true,
@@ -154,6 +160,7 @@ VALUES
         'Botanical Monogram Letter Keychain',
         'Personalized resin initial keychain with dried white gypsophila (baby''s breath) and golden leaf accents. Includes premium alloy keyring and soft suede tassel.',
         1200,
+        14,
         'assets/images/keychain-goldflake.webp',
         'keychains',
         true,
@@ -163,6 +170,7 @@ VALUES
         'Dried Daisy Bar Keychain',
         'Crystal clear geometric resin bar with an intact miniature dried meadow daisy. Sturdy and water-resistant for daily keys.',
         1350,
+        6,
         'assets/images/keychain-daisy.webp',
         'keychains',
         true,
@@ -172,6 +180,7 @@ VALUES
         'Bridal Garland Keepsake Frame (6x6")',
         'Everlasting custom preservation of your Nikkah or wedding floral garland. Carefully freeze-dried and cast in premium high-gloss artist-grade resin block.',
         8500,
+        2,
         'assets/images/preservation-bridal-frame.webp',
         'preservations',
         true,
@@ -181,6 +190,7 @@ VALUES
         'Rose Petal Keepsake Heart',
         'Freestanding 3D resin heart infused with preserved rose petals and pearl shimmer, preserving sentimental memories for anniversaries or memorials.',
         4200,
+        4,
         'assets/images/preservation-anniversary-heart.webp',
         'preservations',
         true,
@@ -190,6 +200,7 @@ VALUES
         'Coastal Bloom Resin Vanity Tray',
         'Handmade decorative tray with genuine dried lavender, rose petals, and shimmering mica waves. Features polished brass side handles.',
         5400,
+        3,
         'assets/images/art-ocean-tray.webp',
         'other',
         true,
@@ -199,6 +210,7 @@ VALUES
         'Botanical Floral Bookmark',
         'Slim, flexible, and ultra-durable resin bookmark with hand-pressed wild blooms and a hand-tied blush silk tassel. A perfect gift for readers.',
         950,
+        10,
         'assets/images/art-floral-bookmark.webp',
         'other',
         true,
